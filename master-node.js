@@ -36,7 +36,7 @@ const ipfs = new IPFS({
       enabled: true // enable circuit relay HOP (make this node a relay)
     }
   },
-  pubsub: true
+  // pubsub: true
 })
 
 ipfs.on('error', (err) => console.error(err))
@@ -112,7 +112,7 @@ ipfs.on('ready', async () => {
   // sending online nodes in master channel
   setInterval(() => {
     const msg = { onlineNodes: onlineNodes }
-    const msgEncoded = ipfs.types.Buffer.from(JSON.stringify(msg))
+    const msgEncoded = Buffer.from(JSON.stringify(msg))
     ipfs.pubsub.publish(PUBSUB_CHANNEL, msgEncoded)
   }, 1000)
 
@@ -167,20 +167,20 @@ ipfs.on('ready', async () => {
         }
       }
     }
-    // for channel betwwen 2 peer exists 
+    // for channel betwwen 2 peer exists
     if (chatData) {
       const entry2 = { peer1: from, peer2: to, channelName: chatData.channelName, dbName: chatData.dbName, dbId: dbID, exist: true }
-      const msgEncoded = ipfs.types.Buffer.from(JSON.stringify(entry2))
+      const msgEncoded = Buffer.from(JSON.stringify(entry2))
       ipfs.pubsub.publish(from, msgEncoded);
       return chatData
     }
-    // for  channel betwwen 2 peer not exists 
+    // for  channel betwwen 2 peer not exists
     try {
 
       const entry = { peer1: from, peer2: to, channelName: channelName, dbName: dbName, dbId: dbID, exist: false }
        //encrypt entry here
       await dbControl.add(entry)
-      const msgEncoded = ipfs.types.Buffer.from(JSON.stringify(entry))
+      const msgEncoded = Buffer.from(JSON.stringify(entry))
       ipfs.pubsub.publish(from, msgEncoded);
     } catch (e) {
       console.error(e)
@@ -190,12 +190,3 @@ ipfs.on('ready', async () => {
 
   }
 })
-
-
-
-
-
-
-
-
-
